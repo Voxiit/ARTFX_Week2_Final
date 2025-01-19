@@ -36,10 +36,12 @@ void UKeyMappingCommonAW::OnKeySelected(FInputChord SelectedKey)
 	if (!PlayerController)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Warning - No Player Controller Found in Option Menu"));
+		return;
 	}
 
 	// Update key
 	PlayerController->OnUpdateBindedKey(InputName, SelectedKey.Key);
+	OnKeyButtonPressed.Broadcast();
 }
 
 void UKeyMappingCommonAW::SetInputName(FName InName)
@@ -72,4 +74,9 @@ void UKeyMappingCommonAW::OnResetButtonClicked()
 	}
 
 	PlayerController->OnResetBindedKey( InputName, DisplayedKey, this);
+}
+
+UInputKeySelector* UKeyMappingCommonAW::GetInputKeySelector() const
+{
+	return BIND_InputKeySelector;
 }

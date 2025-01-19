@@ -3,7 +3,6 @@
 
 #include "UI/OptionMenuCommonAW.h"
 #include "UI/MainCommonButtonBase.h"
-#include "UI/KeyMappingCommonAW.h"
 #include "UI/KeybindingsMenuCommonAW.h"
 
 #include "Components/Slider.h"
@@ -11,8 +10,7 @@
 #include "CommonTextBlock.h"
 #include "Components/VerticalBox.h"
 
-#include "EnhancedInputSubsystems.h"
-#include "EnhancedActionKeyMapping.h"
+
 #include "Controller/MainPlayerController.h"
 
 void UOptionMenuCommonAW::NativeConstruct()
@@ -65,10 +63,8 @@ void UOptionMenuCommonAW::NativeConstruct()
 	if (BIND_KeybindingsMenuButton)
 	{
 		BIND_KeybindingsMenuButton->OnButtonClicked.AddUniqueDynamic(this, &UOptionMenuCommonAW::OnKeybindingsMenuButtonClicked);
+		BIND_KeybindingsMenuButton->SetFocus(); // Set the focus on the first button for using a gamepad
 	}
-
-	// Key Mappings
-	//DisplayMappableKeys();
 }
 
 void UOptionMenuCommonAW::OpenMenu()
@@ -156,44 +152,3 @@ void UOptionMenuCommonAW::OnKeybindingsMenuClosed(UUserWidget* ClosedWidget)
 		BIND_KeybindingsMenuButton->SetFocus();
 	}
 }
-
-/*
-void UOptionMenuCommonAW::DisplayMappableKeys()
-{
-	if (!PlayerController.IsValid() || !KeybindingsWidget || !BIND_KeybindingsVerticalBox)
-	{
-		return;
-	}
-
-	// Get Enhanced Input subsystem
-	UEnhancedInputLocalPlayerSubsystem* EnhancedInputSubsystem =
-		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
-	if (!EnhancedInputSubsystem)
-	{
-		return;
-	}
-
-	// For each mappable key, create and display a keymapping widget
-	TArray<FEnhancedActionKeyMapping> MappableKeyArray = EnhancedInputSubsystem->GetAllPlayerMappableActionKeyMappings();
-	for (FEnhancedActionKeyMapping& MappableKey : MappableKeyArray)
-	{
-		// Get key infos
-		FName KeyName = MappableKey.GetMappingName();
-		FText KeyDisplayName = MappableKey.GetDisplayName();
-
-		// Create and display infos
-		UKeyMappingCommonAW* NewKeyWidget =
-			Cast<UKeyMappingCommonAW>(CreateWidget<UKeyMappingCommonAW>(this, KeybindingsWidget));
-		if (NewKeyWidget)
-		{
-			NewKeyWidget->SetInputName(KeyName);
-			NewKeyWidget->SetDisplayName(KeyDisplayName);
-			NewKeyWidget->SetInputSelector(MappableKey);
-		}
-
-		// Place Widget in Vertical Box
-		BIND_KeybindingsVerticalBox->AddChild(NewKeyWidget);
-	}
-}
-*/
-

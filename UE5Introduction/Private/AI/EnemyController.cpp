@@ -10,6 +10,7 @@
 #include "Player/MainPlayer.h"
 #include "Gameplay/GravityGunComponent.h"
 #include "Gameplay/Goal.h"
+#include "Components/SphereComponent.h"
 
 #include "AI/EnemyCharacter.h"
 
@@ -60,11 +61,23 @@ void AEnemyController::BeginPlay()
             PlayerGoal->OnAISphereOverlap.AddUniqueDynamic(this, &AEnemyController::OnActorOverlapAISphere);
             EnemyGoal->OnAISphereOverlap.AddUniqueDynamic(this, &AEnemyController::OnActorOverlapAISphere);
         }
-    }
 
-    // I need this fix cause the AI is already inside my defense sphere
-    // TODO - CHECK IF THE ENEMY IS INSIDE THE SPHERE AT THE BEGIN PLAYER 
-    Blackboard->SetValueAsBool(EnemyIsInDefenseSphereName, true); 
+        // Check if the AI is inside a Goal's Sphere at the Begin Play
+        TArray<AActor*> OverlappingActors;
+        USphereComponent* PlayerGoalSphere = PlayerGoal->GetCollisionSphere();
+        PlayerGoalSphere->GetOverlappingActors(OverlappingActors, AEnemyCharacter::StaticClass());
+        if (!OverlappingActors.IsEmpty())
+        {
+            Blackboard->SetValueAsBool(EnemyIsInAttackSphereName, true);
+        }
+
+        USphereComponent* EnemyGoalSphere = EnemyGoal->GetCollisionSphere();
+        EnemyGoalSphere->GetOverlappingActors(OverlappingActors, AEnemyCharacter::StaticClass());
+        if (!OverlappingActors.IsEmpty())
+        {
+            Blackboard->SetValueAsBool(EnemyIsInDefenseSphereName, true);
+        }
+    }
 
     // At the beginning, the AI can take the pick up
     Blackboard->SetValueAsBool(CanTakePickUpName, true);

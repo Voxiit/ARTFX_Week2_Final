@@ -91,6 +91,7 @@ protected:
 public:
 	FAISphereOverlapDelegate OnAISphereOverlap;
 	EAIBehaviorType GetBehaviorType() const;
+	class USphereComponent* GetCollisionSphere() const;
 
 protected:
 	UFUNCTION()

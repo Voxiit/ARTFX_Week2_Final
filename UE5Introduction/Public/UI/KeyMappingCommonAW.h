@@ -9,6 +9,7 @@
 
 #include "KeyMappingCommonAW.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FKeyButtonPressedDelegate);
 
 UCLASS(Abstract)
 class UE5INTRODUCTION_API UKeyMappingCommonAW : public UCommonActivatableWidget
@@ -51,4 +52,14 @@ protected:
 	void OnResetButtonClicked();
 
 // End of Reset
+
+
+// Navigation
+public:
+	FKeyButtonPressedDelegate OnKeyButtonPressed;
+
+public:
+	class UInputKeySelector* GetInputKeySelector() const;
+
+// End of Navigation
 };
